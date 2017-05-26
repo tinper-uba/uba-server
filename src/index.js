@@ -1,11 +1,23 @@
-const chalk = require("chalk");
+var chalk = require("chalk");
+var path = require("path");
+
+var express = require("express");
+var webpackDevMiddleware = require("webpack-dev-middleware");
+var webpack = require("webpack");
+var webpackConfig = require("./webpack.config");
+console.log(webpackConfig);
+
+var app = express();
+var compiler = webpack(webpackConfig);
+
+
 
 
 
 function getHelp() {
   console.log(chalk.green(" Usage : "));
   console.log();
-  console.log(chalk.green(" uba install <name>"));
+  console.log(chalk.green(" uba server"));
   console.log();
   process.exit(0);
 }
@@ -15,6 +27,20 @@ function getVersion() {
   process.exit(0);
 }
 
+function server() {
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    noInfo: false,
+    stats: {
+      colors: true
+    }
+  }));
+  app.use(require("webpack-hot-middleware")(compiler));
+
+  app.listen(3000, function() {
+    console.log("Listening on port 3000!");
+  });
+}
 
 module.exports = {
   plugin: function(options) {
@@ -27,7 +53,8 @@ module.exports = {
       getVersion();
     }
 
-    console.log(chalk.green("Hello"));
+    server();
+
 
   }
 }

@@ -2,7 +2,7 @@
 
 ## 说明
 
-基于webpack中间件进行开发调试服务
+基于`express`、`webpack-dev-middleware`的方式来开发调试服务功能
 
 ## 使用
 
