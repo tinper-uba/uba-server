@@ -7,9 +7,9 @@ var ubaConfig;
 
 
 try {
-  ubaConfig = require(path.resolve(".","uba.config.js"))();
+  ubaConfig = require(path.resolve(".","uba.config.js"));
 } catch (e) {
-  console.log(" Error : not found \'uba.config.js\' file.");
+  console.log(" Error : ");
   console.log(e);
   process.exit(0);
 } finally {

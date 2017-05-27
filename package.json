@@ -1,6 +1,6 @@
 {
   "name": "uba-server",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "uba plugin for dev server",
   "main": "index.js",
   "bin": {
