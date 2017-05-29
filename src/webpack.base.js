@@ -7,9 +7,8 @@ var ubaConfig;
 
 
 try {
-  ubaConfig = require(path.resolve(".","uba.config.js"));
+  ubaConfig = require(path.resolve(".","uba.config.js")).devConfig;
 } catch (e) {
-  console.log(" Error : ");
   console.log(e);
   process.exit(0);
 } finally {
