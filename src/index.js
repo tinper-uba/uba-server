@@ -8,9 +8,27 @@ var webpackConfig = require("./webpack.base");
 
 
 var app = express();
+var router = express.Router();
 var compiler = webpack(webpackConfig);
+var mockJS,svrConfig;
 
 
+try {
+  mockJS = require(path.resolve(".", "mock", "mock.js"))(router);
+} catch (e) {
+  console.log(e);
+  process.exit(0);
+} finally {
+
+}
+try {
+  svrConfig = require(path.resolve(".", "uba.config.js")).svrConfig;
+} catch (e) {
+  console.log(e);
+  process.exit(0);
+} finally {
+
+}
 
 
 
@@ -28,6 +46,8 @@ function getVersion() {
 }
 
 function server() {
+  app.use(express.static(path.resolve('.', 'mock')));
+  app.use(mockJS);
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
     noInfo: false,
@@ -37,8 +57,10 @@ function server() {
   }));
   app.use(require("webpack-hot-middleware")(compiler));
 
-  app.listen(3000, function() {
-    console.log("Listening on port 3000!");
+
+
+  app.listen(svrConfig.port,svrConfig.host, function() {
+    console.log(`Listening on port http://${svrConfig.host}:${svrConfig.port}`);
   });
 }
 
