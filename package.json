@@ -1,6 +1,6 @@
 {
   "name": "uba-server",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "uba plugin for dev server",
   "main": "index.js",
   "bin": {
@@ -31,5 +31,8 @@
     "webpack-dev-middleware": "^1.10.2",
     "webpack-hot-middleware": "^2.18.0",
     "webpack-merge": "^4.1.0"
+  },
+  "devDependencies": {
+    "express-http-proxy": "^1.0.3"
   }
 }

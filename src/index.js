@@ -2,6 +2,7 @@ var chalk = require("chalk");
 var path = require("path");
 
 var express = require("express");
+var proxy = require('express-http-proxy');
 var webpackDevMiddleware = require("webpack-dev-middleware");
 var webpack = require("webpack");
 var webpackConfig = require("./webpack.base");
@@ -10,7 +11,7 @@ var webpackConfig = require("./webpack.base");
 var app = express();
 var router = express.Router();
 var compiler = webpack(webpackConfig);
-var mockJS,svrConfig;
+var mockJS, svrConfig, proxyConfig;
 
 
 try {
@@ -23,6 +24,8 @@ try {
 }
 try {
   svrConfig = require(path.resolve(".", "uba.config.js")).svrConfig;
+  proxyConfig = require(path.resolve(".", "uba.config.js")).proxyConfig;
+
 } catch (e) {
   console.log(e);
   process.exit(0);
@@ -46,6 +49,7 @@ function getVersion() {
 }
 
 function server() {
+
   app.use(express.static(path.resolve('.', 'mock')));
   app.use(mockJS);
   app.use(webpackDevMiddleware(compiler, {
@@ -55,11 +59,17 @@ function server() {
       colors: true
     }
   }));
+
+
+  proxyConfig.forEach(function(element) {
+    app.use(element.router, proxy(element.url));
+  });
+
   app.use(require("webpack-hot-middleware")(compiler));
 
 
 
-  app.listen(svrConfig.port,svrConfig.host, function() {
+  app.listen(svrConfig.port, svrConfig.host, function() {
     console.log(`Listening on port http://${svrConfig.host}:${svrConfig.port}`);
   });
 }
