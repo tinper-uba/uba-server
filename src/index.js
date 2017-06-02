@@ -11,7 +11,7 @@ var webpackConfig = require("./webpack.base");
 var app = express();
 var router = express.Router();
 var compiler = webpack(webpackConfig);
-var mockJS, svrConfig, proxyConfig;
+var mockJS, svrConfig, proxyConfig,staticConfig;
 
 
 try {
@@ -25,6 +25,8 @@ try {
 try {
   svrConfig = require(path.resolve(".", "uba.config.js")).svrConfig;
   proxyConfig = require(path.resolve(".", "uba.config.js")).proxyConfig;
+  staticConfig = require(path.resolve(".", "uba.config.js")).staticConfig;
+
 
 } catch (e) {
   console.log(e);
@@ -49,8 +51,8 @@ function getVersion() {
 }
 
 function server() {
-
   app.use(express.static(path.resolve('.', 'mock')));
+  app.use(express.static(path.resolve('.', staticConfig.folder)));
   app.use(mockJS);
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
