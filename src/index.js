@@ -11,11 +11,12 @@ var webpackConfig = require("./webpack.base");
 var app = express();
 var router = express.Router();
 var compiler = webpack(webpackConfig);
-var mockJS, svrConfig, proxyConfig,staticConfig;
+var mockJS,mockConfig, svrConfig, proxyConfig,staticConfig;
 
 
 try {
   mockJS = require(path.resolve(".", "mock", "mock.js"))(router);
+
 } catch (e) {
   console.log(e);
   process.exit(0);
@@ -26,7 +27,7 @@ try {
   svrConfig = require(path.resolve(".", "uba.config.js")).svrConfig;
   proxyConfig = require(path.resolve(".", "uba.config.js")).proxyConfig;
   staticConfig = require(path.resolve(".", "uba.config.js")).staticConfig;
-
+  mockConfig = require(path.resolve(".", "uba.mock.js"));
 
 } catch (e) {
   console.log(e);
@@ -51,9 +52,43 @@ function getVersion() {
 }
 
 function server() {
+  if(mockConfig["GET"]){
+    for (let i = 0; i < mockConfig["GET"].length; i++) {
+      for (let item in mockConfig["GET"][i]) {
+        //console.log(item);
+        //console.log(mockConfig["GET"][i][item]);
+        console.log(`【Mock GET】 :load mockRouter [${item}] to ${mockConfig["GET"][i][item]}`);
+        router.get(item, function(req, res, next) {
+          res.sendFile(path.resolve(".",mockConfig["GET"][i][item]),{
+            headers : {
+              "mockServer" : "uba"
+            }
+          });
+        });
+      }
+    }
+  }
+  if(mockConfig["POST"]){
+    for (let i = 0; i < mockConfig["POST"].length; i++) {
+      for (let item in mockConfig["POST"][i]) {
+        // console.log(item);
+        // console.log(mockConfig["POST"][i][item]);
+        console.log(`【Mock POST】:load mockRouter [${item}] to ${mockConfig["POST"][i][item]}`);
+        router.post(item, function(req, res, next) {
+          res.sendFile(path.resolve(".",mockConfig["POST"][i][item]),{
+            headers : {
+              "mockServer" : "uba"
+            }
+          });
+        });
+      }
+    }
+  }
+
   app.use(express.static(path.resolve('.', 'mock')));
   app.use(express.static(path.resolve('.', staticConfig.folder)));
   app.use(mockJS);
+  app.use(router);
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
     noInfo: false,
@@ -69,7 +104,7 @@ function server() {
 
   app.use(require("webpack-hot-middleware")(compiler));
 
-
+  //console.log(mockConfig["GET"]);
 
   app.listen(svrConfig.port, svrConfig.host, function() {
     console.log(`Listening on port http://${svrConfig.host}:${svrConfig.port}`);
