@@ -1,5 +1,6 @@
 var chalk = require("chalk");
 var path = require("path");
+var os = require("os");
 
 var express = require("express");
 var proxy = require('express-http-proxy');
@@ -12,6 +13,7 @@ var app = express();
 var router = express.Router();
 var compiler = webpack(webpackConfig);
 var mockJS,mockConfig, svrConfig, proxyConfig,staticConfig;
+var isMac = os.platform() == "darwin" ? true : false;
 
 
 try {
@@ -91,7 +93,7 @@ function server() {
   app.use(router);
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    noInfo: false,
+    noInfo: isMac,
     stats: {
       colors: true
     }
@@ -121,9 +123,6 @@ module.exports = {
     if (options.argv.v || options.argv.version) {
       getVersion();
     }
-
     server();
-
-
   }
 }
