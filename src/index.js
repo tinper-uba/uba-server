@@ -93,7 +93,7 @@ function server() {
   app.use(router);
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    noInfo: isMac,
+    noInfo: false,
     stats: {
       colors: true
     }
