@@ -54,7 +54,14 @@ function getVersion() {
 }
 
 function server() {
-  if(mockConfig["GET"]){
+
+
+
+  app.use(express.static(path.resolve('.', 'mock')));
+  app.use(express.static(path.resolve('.', staticConfig.folder)));
+  if(proxyConfig.length!=0){
+    if(!proxyConfig[0].enable){
+        if(mockConfig["GET"]){
     for (let i = 0; i < mockConfig["GET"].length; i++) {
       for (let item in mockConfig["GET"][i]) {
         //console.log(item);
@@ -86,11 +93,11 @@ function server() {
       }
     }
   }
+     app.use(router);
+    }
+  }
+   app.use(mockJS);
 
-  app.use(express.static(path.resolve('.', 'mock')));
-  app.use(express.static(path.resolve('.', staticConfig.folder)));
-  app.use(mockJS);
-  app.use(router);
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
     noInfo: false,
@@ -101,7 +108,9 @@ function server() {
 
 
   proxyConfig.forEach(function(element) {
-    app.use(element.router, proxy(element.url));
+    if(element.enable){
+      app.use(element.router, proxy(element.url));
+    }
   });
 
   app.use(require("webpack-hot-middleware")(compiler));
