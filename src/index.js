@@ -1,7 +1,5 @@
 var chalk = require("chalk");
 var path = require("path");
-var os = require("os");
-
 var express = require("express");
 var proxy = require('express-http-proxy');
 var webpackDevMiddleware = require("webpack-dev-middleware");
@@ -12,8 +10,7 @@ var webpackConfig = require("./webpack.base");
 var app = express();
 var router = express.Router();
 var compiler = webpack(webpackConfig);
-var mockJS,mockConfig, svrConfig, proxyConfig,staticConfig;
-var isMac = os.platform() == "darwin" ? true : false;
+var mockJS, mockConfig, svrConfig, proxyConfig, staticConfig;
 
 
 try {
@@ -54,49 +51,47 @@ function getVersion() {
 }
 
 function server() {
-
-
-
   app.use(express.static(path.resolve('.', 'mock')));
   app.use(express.static(path.resolve('.', staticConfig.folder)));
-  if(proxyConfig.length!=0){
-    if(!proxyConfig[0].enable){
-        if(mockConfig["GET"]){
-    for (let i = 0; i < mockConfig["GET"].length; i++) {
-      for (let item in mockConfig["GET"][i]) {
-        //console.log(item);
-        //console.log(mockConfig["GET"][i][item]);
-        console.log(`【Mock GET】 :load mockRouter [${item}] to ${mockConfig["GET"][i][item]}`);
-        router.get(item, function(req, res, next) {
-          res.sendFile(path.resolve(".",mockConfig["GET"][i][item]),{
-            headers : {
-              "mockServer" : "uba"
-            }
-          });
-        });
+  if (proxyConfig.length != 0) {
+    if (!proxyConfig[0].enable) {
+      if (mockConfig["GET"]) {
+        for (let i = 0; i < mockConfig["GET"].length; i++) {
+          for (let item in mockConfig["GET"][i]) {
+            //console.log(item);
+            //console.log(mockConfig["GET"][i][item]);
+            console.log(`【Mock GET】 :load mockRouter [${item}] to ${mockConfig["GET"][i][item]}`);
+            router.get(item, function(req, res, next) {
+              res.sendFile(path.resolve(".", mockConfig["GET"][i][item]), {
+                headers: {
+                  "mockServer": "uba"
+                }
+              });
+            });
+          }
+        }
       }
-    }
-  }
-  if(mockConfig["POST"]){
-    for (let i = 0; i < mockConfig["POST"].length; i++) {
-      for (let item in mockConfig["POST"][i]) {
-        // console.log(item);
-        // console.log(mockConfig["POST"][i][item]);
-        console.log(`【Mock POST】:load mockRouter [${item}] to ${mockConfig["POST"][i][item]}`);
-        router.post(item, function(req, res, next) {
-          res.sendFile(path.resolve(".",mockConfig["POST"][i][item]),{
-            headers : {
-              "mockServer" : "uba"
-            }
-          });
-        });
+      if (mockConfig["POST"]) {
+        for (let i = 0; i < mockConfig["POST"].length; i++) {
+          for (let item in mockConfig["POST"][i]) {
+            // console.log(item);
+            // console.log(mockConfig["POST"][i][item]);
+            console.log(`【Mock POST】:load mockRouter [${item}] to ${mockConfig["POST"][i][item]}`);
+            router.post(item, function(req, res, next) {
+              res.sendFile(path.resolve(".", mockConfig["POST"][i][item]), {
+                headers: {
+                  "mockServer": "uba"
+                }
+              });
+            });
+          }
+        }
       }
+      app.use(router);
     }
   }
-     app.use(router);
-    }
-  }
-   app.use(mockJS);
+  app.use(mockJS);
+
 
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
@@ -106,12 +101,12 @@ function server() {
     }
   }));
 
-
   proxyConfig.forEach(function(element) {
-    if(element.enable){
-      app.use(element.router, proxy(element.url));
+    if (element.enable) {
+      app.use(element.router, proxy(element.url, element.options));
     }
   });
+
 
   app.use(require("webpack-hot-middleware")(compiler));
 
