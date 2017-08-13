@@ -10,25 +10,26 @@ var webpackConfig = require("./webpack.base");
 var app = express();
 var router = express.Router();
 var compiler = webpack(webpackConfig);
-var mockJS, mockConfig, svrConfig, proxyConfig, staticConfig;
+var mockConfig, svrConfig, proxyConfig, staticConfig;
 
 try {
   svrConfig = require(path.resolve(".", "uba.config.js")).svrConfig;
   proxyConfig = require(path.resolve(".", "uba.config.js")).proxyConfig;
   staticConfig = require(path.resolve(".", "uba.config.js")).staticConfig;
 } catch (e) {
-  console.log(chalk.red("[Error]:The \'uba.config.js\' configuration file was not found"));
+  console.log(e);
+  // console.log(chalk.red("[Error]:The \'uba.config.js\' configuration file was not found"));
   process.exit(0);
 } finally {
 
 }
 
 try {
-    mockJS = require(path.resolve(".", "mock", "mock.js"))(router);
-    mockConfig = require(path.resolve(".", "uba.mock.js"));
+  mockConfig = require(path.resolve(".", "uba.mock.js"));
 } catch (e) {
-  console.log(chalk.yellow("[Warning]:The \'uba.mock.js\' configuration file was not found"));
-  mockConfig = mockJS = undefined;
+  console.log(e);
+  // console.log(chalk.yellow("[Warning]:The \'uba.mock.js\' configuration file was not found"));
+  mockConfig = undefined;
 } finally {
 
 }
@@ -52,7 +53,7 @@ function server() {
   app.use(express.static(path.resolve('.', 'mock')));
   app.use(express.static(path.resolve('.', staticConfig.folder)));
 
-  if(mockConfig){
+  if (mockConfig) {
     if (proxyConfig.length != 0) {
       if (!proxyConfig[0].enable) {
         if (mockConfig["GET"]) {
@@ -60,7 +61,7 @@ function server() {
             for (let item in mockConfig["GET"][i]) {
               //console.log(item);
               //console.log(mockConfig["GET"][i][item]);
-              console.log(`【Mock GET】 :load mockRouter [${item}] to ${mockConfig["GET"][i][item]}`);
+              console.log(`GET:  [${item}] to ${mockConfig["GET"][i][item]}`);
               router.get(item, function(req, res, next) {
                 res.sendFile(path.resolve(".", mockConfig["GET"][i][item]), {
                   headers: {
@@ -76,7 +77,7 @@ function server() {
             for (let item in mockConfig["POST"][i]) {
               // console.log(item);
               // console.log(mockConfig["POST"][i][item]);
-              console.log(`【Mock POST】:load mockRouter [${item}] to ${mockConfig["POST"][i][item]}`);
+              console.log(`POST: [${item}] to ${mockConfig["POST"][i][item]}`);
               router.post(item, function(req, res, next) {
                 res.sendFile(path.resolve(".", mockConfig["POST"][i][item]), {
                   headers: {
@@ -91,12 +92,6 @@ function server() {
       }
     }
   }
-
-  if(mockJS){
-    app.use(mockJS);
-  }
-
-
 
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
