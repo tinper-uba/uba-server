@@ -17,7 +17,7 @@ try {
   proxyConfig = require(path.resolve(".", "uba.config.js")).proxyConfig;
   staticConfig = require(path.resolve(".", "uba.config.js")).staticConfig;
 } catch (e) {
-  console.log(e);
+  console.log(chalk.red(e));
   // console.log(chalk.red("[Error]:The \'uba.config.js\' configuration file was not found"));
   process.exit(0);
 } finally {
@@ -27,7 +27,7 @@ try {
 try {
   mockConfig = require(path.resolve(".", "uba.mock.js"));
 } catch (e) {
-  console.log(e);
+  console.log(chalk.red(e));
   // console.log(chalk.yellow("[Warning]:The \'uba.mock.js\' configuration file was not found"));
   mockConfig = undefined;
 } finally {

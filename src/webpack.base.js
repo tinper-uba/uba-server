@@ -10,7 +10,8 @@ var ubaConfig;
 try {
   ubaConfig = require(path.resolve(".","uba.config.js")).devConfig;
 } catch (e) {
-  console.log(chalk.red("[Error]:The \'uba.config.js\' configuration file was not found"));
+  console.log(chalk.red(e));
+  // console.log(chalk.red("[Error]:The \'uba.config.js\' configuration file was not found"));
   process.exit(0);
 } finally {
 
