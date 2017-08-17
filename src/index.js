@@ -118,16 +118,14 @@ function server() {
     }
   }));
 
-
-
-
   app.use(require("webpack-hot-middleware")(compiler));
 
-  //console.log(mockConfig["GET"]);
-
   app.listen(svrConfig.port, svrConfig.host, function() {
+    console.log(chalk.yellow("\n/******************** Start dev server *****************/\n"));
     console.log(chalk.green(`[uba] : Listening on port http://${svrConfig.host}:${svrConfig.port}`));
+    console.log(chalk.yellow("\n/******************** O(∩_∩)O *****************/\n"));
   });
+
 }
 
 module.exports = {
