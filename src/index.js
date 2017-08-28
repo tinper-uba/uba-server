@@ -112,7 +112,7 @@ function server() {
 
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    noInfo: false,
+    noInfo: svrConfig.noInfo,
     stats: {
       colors: true
     }
