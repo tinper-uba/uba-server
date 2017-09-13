@@ -2,7 +2,7 @@
  * @Author: Kvkens
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2017-08-16 14:22:42
+ * @Last Modified time: 2017-09-13 15:52:25
  */
 
 var chalk = require("chalk");
@@ -69,13 +69,24 @@ function isEnableProxy() {
 }
 
 
+
+
+
 //开发调试总程序
 function server() {
   //设置默认mock
   app.use(express.static(path.resolve('.', 'mock')));
   //设置指定静态资源目录
   app.use(express.static(path.resolve('.', staticConfig.folder)));
-  //判断是否启用mock
+  //加载webpack处理
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    noInfo: svrConfig.noInfo,
+    stats: {
+      colors: true
+    }
+  }));
+  //判断是否启用proxy
   if (isEnableProxy()) {
     console.log(chalk.yellow("\n/******************** Start loading proxy server ********************/\n"));
     proxyConfig.forEach(function(element) {
@@ -105,18 +116,6 @@ function server() {
     console.log(chalk.yellow("\n/******************** Mock server loaded completed *****************/\n"));
     app.use(router);
   }
-
-
-  // console.log("exit");
-  // process.exit(0);
-
-  app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    noInfo: svrConfig.noInfo,
-    stats: {
-      colors: true
-    }
-  }));
 
   app.use(require("webpack-hot-middleware")(compiler));
 
