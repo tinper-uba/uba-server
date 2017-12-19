@@ -2,7 +2,7 @@
  * @Author: Kvkens
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2017-11-14 23:45:25
+ * @Last Modified time: 2017-12-19 19:33:56
  */
 
 var chalk = require("chalk");
@@ -55,16 +55,6 @@ function getVersion() {
   process.exit(0);
 }
 
-function isEnableProxy() {
-  let isBreak = false;
-  for (let i = 0; i < proxyConfig.length; i++) {
-    if (proxyConfig[i].enable) {
-      isBreak = true;
-      break;
-    }
-  }
-  return isBreak;
-}
 
 //开发调试总程序
 function server() {
@@ -80,36 +70,36 @@ function server() {
       colors: true
     }
   }));
-  //判断是否启用proxy
-  if (isEnableProxy()) {
-    console.log(chalk.yellow("\n/******************** Start loading proxy server ********************/\n"));
-    proxyConfig.forEach(function (element) {
-      if (element.enable) {
-        app.use(element.router, proxy(element.url, element.options));
-        console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
-      }
-    });
-    console.log(chalk.yellow("\n/******************** Proxy server loaded completed *****************/\n"));
-  } else {
-    console.log(chalk.yellow("\n/******************** Start loading mock server ********************/\n"));
-    for (let item in mockConfig) {
-      for (let i = 0; i < mockConfig[item].length; i++) {
-        for (let url in mockConfig[item][i]) {
-          console.log(chalk.green(`[mock]:[${url}] to ${mockConfig[item][i][url]}`));
-          router.all(url, function (req, res, next) {
-            console.log(chalk.green(`[mock]: ${req.method} ${req.ip} client router [${url}]-[${mockConfig[item][i][url]}]`));
-            res.sendFile(path.resolve(".", mockConfig[item][i][url]), {
-              headers: {
-                "uba-server": require("../package.json").version
-              }
-            });
+
+  //开始加载Mock
+  console.log(chalk.yellow("\n/******************** Start loading mock server ********************/\n"));
+  for (let item in mockConfig) {
+    for (let i = 0; i < mockConfig[item].length; i++) {
+      for (let url in mockConfig[item][i]) {
+        console.log(chalk.green(`[mock]:[${url}] to ${mockConfig[item][i][url]}`));
+        router.all(url, function (req, res, next) {
+          console.log(chalk.green(`[mock]: ${req.method} ${req.ip} client router [${url}]-[${mockConfig[item][i][url]}]`));
+          res.sendFile(path.resolve(".", mockConfig[item][i][url]), {
+            headers: {
+              "uba-server": require("../package.json").version
+            }
           });
-        }
+        });
       }
     }
-    console.log(chalk.yellow("\n/******************** Mock server loaded completed *****************/\n"));
-    app.use(router);
   }
+  console.log(chalk.yellow("\n/******************** Mock server loaded completed *****************/\n"));
+  app.use(router);
+
+  //开始加载代理
+  console.log(chalk.yellow("\n/******************** Start loading proxy server ********************/\n"));
+  proxyConfig.forEach(function (element) {
+    if (element.enable) {
+      app.use(element.router, proxy(element.url, element.options));
+      console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
+    }
+  });
+  console.log(chalk.yellow("\n/******************** Proxy server loaded completed *****************/\n"));
 
   app.use(require("webpack-hot-middleware")(compiler));
 
@@ -125,7 +115,7 @@ function server() {
       console.log(chalk.yellow("\n/******************** O(∩_∩)O *****************/\n"));
     });
   });
-  
+
 
 }
 
