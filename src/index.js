@@ -15,27 +15,17 @@ const hotMiddleware = require("koa-uba-hot-middleware");
 const OpenBrowserPlugin = require("open-browser-webpack-plugin");
 const ip = require("ip");
 const portfinder = require("portfinder");
-const webpackConfig = util.getUbaConfig();
+const webpackConfig = require("./pack");
 const compiler = webpack(webpackConfig);
 
 /**
  * dev server 主程序
  */
 function server(opt) {
-  //优化共享chunk
-  compiler.apply(new webpack.optimize.CommonsChunkPlugin({
-    name: "verdor",
-    filename: "[name].[hash:8].js"
-  }));
   //打开浏览器
   compiler.apply(new OpenBrowserPlugin({
     url: `http://${opt.ip}:${opt.port}`
   }));
-  //热更新
-  compiler.apply(new webpack.HotModuleReplacementPlugin());
-  //加载进度条
-  compiler.apply(new webpack.ProgressPlugin());
-
   //静态编译
   const instance = devMiddleware(compiler, {
     logTime: true,
@@ -47,7 +37,7 @@ function server(opt) {
       colors: true
     }
   });
-  //加载
+  //加载实例
   app.use(instance);
   //热更新
   app.use(hotMiddleware(compiler));

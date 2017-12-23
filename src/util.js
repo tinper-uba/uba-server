@@ -15,7 +15,10 @@ exports.getRunPath = (file) => {
  */
 exports.getUbaConfig = () => {
   try {
-    return require(this.getRunPath("uba.config.js"))("develop");
+    return require(this.getRunPath("uba.config.js"))({
+      "production": false,
+      "HMR" : "webpack-hot-middleware/client?noInfo=false&reload=true"
+    });
   } catch (error) {
     console.log(error);
     console.log(chalk.red("[uba] : 'uba.config.js' is error !"))
