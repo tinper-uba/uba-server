@@ -44,3 +44,7 @@ exports.getPort = async() => {
     });
   });
 }
+
+exports.getPkg = () => {
+  return require("../package.json");
+}
