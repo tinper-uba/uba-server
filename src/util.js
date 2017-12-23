@@ -15,10 +15,10 @@ exports.getRunPath = (file) => {
  */
 exports.getUbaConfig = () => {
   try {
-    return require(this.getRunPath("uba.config.js"));
+    return require(this.getRunPath("uba.config.js"))("develop");
   } catch (error) {
     console.log(error);
-    console.log(chalk.red("[uba] : uba.config.js not found"))
+    console.log(chalk.red("[uba] : 'uba.config.js' is error !"))
     process.exit(0);
   }
 }
@@ -45,6 +45,9 @@ exports.getPort = async() => {
   });
 }
 
+/**
+ * 获取package.json
+ */
 exports.getPkg = () => {
   return require("../package.json");
 }

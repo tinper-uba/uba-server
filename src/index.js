@@ -18,8 +18,6 @@ const portfinder = require("portfinder");
 const webpackConfig = util.getUbaConfig();
 const compiler = webpack(webpackConfig);
 
-
-
 /**
  * dev server 主程序
  */
@@ -35,10 +33,16 @@ function server(opt) {
   }));
   //热更新
   compiler.apply(new webpack.HotModuleReplacementPlugin());
+  //加载进度条
+  compiler.apply(new webpack.ProgressPlugin());
 
   //静态编译
   const instance = devMiddleware(compiler, {
-    logTime : true,
+    logTime: true,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Uba-Server": util.getPkg().version
+    },
     stats: {
       colors: true
     }
@@ -73,6 +77,8 @@ module.exports = {
         port,
         ip: ip.address()
       });
+    }).catch((err) => {
+      console.log(chalk.red(err))
     });
   }
 }
