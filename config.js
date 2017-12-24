@@ -15,7 +15,6 @@ module.exports = (env) => {
         }
       },
       css: {
-        min : env.production,
         name: "[name].[hash:8].css"
       },
       html: {
@@ -26,18 +25,23 @@ module.exports = (env) => {
         template: "./view/index.html"
       },
       js: {
-        min : env.production,
+        min: env.production,
+        opt: {
+          test: /\.js($|\?)/i
+        },
         name: "verdor",
         filename: "[name].[hash:8].js"
       },
       img: {
-        name: "[name].[ext]"
+        limit: 8192,
+        name: "images/[name].[hash:8].[ext]"
       }
     },
     pack: {
       devtool: env.production ? "cheap-module-source-map" : "cheap-module-eval-source-map",
       entry: {
-        app: ["./entry", env.HMR]
+        app: env.production ? "./entry" : ["./entry", env.HMR],
+        verdor: ["react", "react-dom"]
       },
       output: {
         path: path.resolve(__dirname, "public"),
