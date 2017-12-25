@@ -1,7 +1,7 @@
 const path = require("path");
 
-module.exports = (env) => {
-  return {
+module.exports = env => {
+  let uba = {
     config: {
       plugins: {
         mock: {
@@ -26,10 +26,11 @@ module.exports = (env) => {
       },
       js: {
         min: env.production,
+        optimize: false,
         opt: {
           test: /\.js($|\?)/i
         },
-        name: "verdor",
+        name: "vendor",
         filename: "[name].[hash:8].js"
       },
       img: {
@@ -40,8 +41,7 @@ module.exports = (env) => {
     pack: {
       devtool: env.production ? "cheap-module-source-map" : "cheap-module-eval-source-map",
       entry: {
-        app: env.production ? "./entry" : ["./entry", env.HMR],
-        verdor: ["react", "react-dom"]
+        app: env.production ? "./entry" : ["./entry", env.HMR]
       },
       output: {
         path: path.resolve(__dirname, "public"),
@@ -58,4 +58,5 @@ module.exports = (env) => {
       }
     }
   }
+  return uba;
 }

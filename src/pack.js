@@ -1,3 +1,10 @@
+/* webpack base config v3
+ * @Author: Kvkens(yueming@yonyou.com)
+ * @Date:   2017-12-22 23:31:04
+ * @Last Modified by:   Kvkens
+ * @Last Modified time: 2017-12-25 13:51:35
+ */
+
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -8,6 +15,7 @@ const util = require("./util");
 const cfg = util.getUbaConfig().config;
 
 const base = {
+  entry : {},
   output: {
     filename: '[name].[hash:8].js'
   },
@@ -47,11 +55,15 @@ const base = {
         loader: "url-loader",
         options: cfg.img
       }]
+    }, {
+      test: /\.(eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
+      use: [{
+        loader: "file-loader",
+        options: cfg.img
+      }]
     }]
   },
   plugins: [
-    //优化共享CommonChunk
-    new webpack.optimize.CommonsChunkPlugin(cfg.js),
     //加载进度条
     new webpack.ProgressPlugin(),
     //Chunk相对路径
@@ -61,10 +73,16 @@ const base = {
     //HTML插件
     new HtmlWebpackPlugin(cfg.html),
     //提取CSS
-    new ExtractTextPlugin(cfg.css.name)
+    new ExtractTextPlugin(cfg.css.name),
+    //优化公共代码
+    new webpack.optimize.CommonsChunkPlugin(cfg.js)
   ]
 }
-
+//优化共享CommonChunk
+if(cfg.js.optimize && util.getVendors().length){
+  base.entry["vendor"] = util.getVendors();
+};
+//压缩插件
 cfg.js.min && base.plugins.push(new UglifyJsPlugin(cfg.js.opt));
 
 module.exports = merge.smart(base, util.getUbaConfig().pack);
