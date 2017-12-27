@@ -29,8 +29,6 @@
     "html-webpack-plugin": "^2.30.1",
     "ip": "^1.1.5",
     "koa": "^2.4.1",
-    "koa-router": "^7.3.0",
-    "koa-static": "^4.0.2",
     "koa-uba-dev-middleware": "^1.0.0",
     "koa-uba-hot-middleware": "^1.0.2",
     "minimist": "^1.2.0",
