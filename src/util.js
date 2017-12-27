@@ -77,3 +77,16 @@ exports.getVendors = () => {
   }
   return _vendors;
 }
+
+
+/**
+ * 加载插件
+ */
+exports.loadPlugins = app => {
+  let plugins = this.getUbaConfig().config.plugins;
+  for (let key in plugins) {
+    let opt = plugins[key];
+    let plg = require(this.getRunPath(`node_modules/uba-server-${key}`));
+    plg(app,opt);
+  }
+}
