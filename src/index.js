@@ -17,11 +17,14 @@ const ip = require("ip");
 const portfinder = require("portfinder");
 const webpackConfig = require("./pack");
 const compiler = webpack(webpackConfig);
+const static = require("koa-static");
 
 /**
  * dev server 主程序
  */
 function server(opt) {
+
+  app.use(static("./static"));
   //打开浏览器
   compiler.apply(new OpenBrowserPlugin({
     url: `http://${opt.ip}:${opt.port}`
@@ -41,6 +44,7 @@ function server(opt) {
   app.use(instance);
   //热更新
   app.use(hotMiddleware(compiler));
+
   //运行调试服务
   app.listen(opt.port, () => {
     console.log();
