@@ -49,7 +49,7 @@ server = opt => {
   app.listen(opt.port, () => {
     console.log();
     console.log(chalk.green(`********************************************`));
-    console.log(chalk.yellow(` ❤️  uba-webpack-koa2-server`));
+    console.log(chalk.yellow(` ❤️  uba-webpack-koa2-dev-server`));
     console.log(chalk.green(` [uba server]: v${util.getPkg().version}`));
     console.log(chalk.green(` [local]     : http://127.0.0.1:${opt.port}`));
     console.log(chalk.green(` [lan]       : http://${opt.ip}:${opt.port}`));
