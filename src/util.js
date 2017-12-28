@@ -88,5 +88,6 @@ exports.loadPlugins = app => {
     let opt = plugins[key];
     let plg = require(this.getRunPath(`node_modules/uba-server-${key}`));
     plg(app,opt);
+    console.log(chalk.yellow(`[plugin] : load uba-server-${key} complete.`))
   }
 }
