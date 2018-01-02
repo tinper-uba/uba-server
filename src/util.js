@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-12-22 23:31:04
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2017-12-25 13:50:17
+ * @Last Modified time: 2018-01-02 16:41:48
  */
 
 const path = require("path");
@@ -87,7 +87,15 @@ exports.loadPlugins = app => {
   for (let key in plugins) {
     let opt = plugins[key];
     let plg = require(this.getRunPath(`node_modules/uba-server-${key}`));
-    plg(app,opt);
+    plg(app, opt);
     console.log(chalk.yellow(`[plugin] : load uba-server-${key} complete.`))
+  }
+}
+
+
+exports.showPluginInfo = () => {
+  let plugins = this.getUbaConfig().config.plugins;
+  for (let key in plugins) {
+    console.log(chalk.green(` [plugin]    : ${key} plugin`));
   }
 }

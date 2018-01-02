@@ -23,8 +23,7 @@ const compiler = webpack(webpackConfig);
  * dev server 主程序
  */
 server = opt => {
-  //加载插件
-  util.loadPlugins(app);
+  
   //打开浏览器
   compiler.apply(new OpenBrowserPlugin({
     url: `http://${opt.ip}:${opt.port}`
@@ -45,6 +44,9 @@ server = opt => {
   //热更新
   app.use(hotMiddleware(compiler));
 
+  //加载插件
+  util.loadPlugins(app);
+
   //运行调试服务
   app.listen(opt.port, () => {
     console.log();
@@ -53,6 +55,7 @@ server = opt => {
     console.log(chalk.green(` [uba server]: v${util.getPkg().version}`));
     console.log(chalk.green(` [local]     : http://127.0.0.1:${opt.port}`));
     console.log(chalk.green(` [lan]       : http://${opt.ip}:${opt.port}`));
+    util.showPluginInfo();
     console.log(chalk.green(`********************************************`));
     console.log();
   });
