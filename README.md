@@ -5,6 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/uba-server.svg)](https://www.npmjs.com/package/uba-server)
 [![devDependency Status](https://img.shields.io/david/dev/tinper-uba/uba-server.svg)](https://david-dm.org/tinper-uba/uba-server#info=devDependencies)
 [![NPM downloads](http://img.shields.io/npm/dt/uba-server.svg?style=flat)](https://npmjs.org/package/uba-server)
+---
 [![NPM](https://nodei.co/npm/uba-server.png)](https://nodei.co/npm/uba-server/)
 
 
