@@ -15,6 +15,7 @@ const hotMiddleware = require("koa-uba-hot-middleware");
 const OpenBrowserPlugin = require("open-browser-webpack-plugin");
 const ip = require("ip");
 const portfinder = require("portfinder");
+const bodyParser = require("koa-bodyparser");
 const webpackConfig = require("./pack");
 const compiler = webpack(webpackConfig);
 
@@ -46,6 +47,8 @@ server = opt => {
 
   //加载插件
   util.loadPlugins(app);
+
+  app.use(bodyParser());
 
   //运行调试服务
   app.listen(opt.port, () => {
