@@ -4,15 +4,19 @@ module.exports = env => {
   let uba = {
     config: {
       plugins: {
-        mock: {
-
-        },
-        proxy: {
-
-        },
         static: {
-
-        }
+          root: "static"
+        },
+        mock: {
+          file: "uba.mock.js"
+        },
+        proxy: [{
+          router : "/api/*",
+          target: "https://cnodejs.org"
+        },{
+          router : ["/users/*","/orgs/*"],
+          target: "https://api.github.com"
+        }]
       },
       css: {
         name: "[name].[hash:8].css"
@@ -26,7 +30,7 @@ module.exports = env => {
       },
       js: {
         min: env.production,
-        optimize: false,
+        optimize: true,
         opt: {
           test: /\.js($|\?)/i
         },
