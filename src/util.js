@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-12-22 23:31:04
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-01-02 16:41:48
+ * @Last Modified time: 2018-01-05 11:17:25
  */
 
 const path = require("path");
@@ -93,6 +93,9 @@ exports.loadPlugins = app => {
 }
 
 
+/**
+ * 显示插件信息
+ */
 exports.showPluginInfo = () => {
   let plugins = this.getUbaConfig().config.plugins;
   for (let key in plugins) {
