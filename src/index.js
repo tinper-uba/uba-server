@@ -71,8 +71,7 @@ function server() {
     noInfo: svrConfig.noInfo,
     stats: {
       colors: true
-    },
-      fallback: true
+    }
   }));
 
   //开始加载Mock
