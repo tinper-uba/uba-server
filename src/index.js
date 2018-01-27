@@ -15,6 +15,7 @@ var webpackConfig = require("./webpack.base");
 var app = express();
 var router = express.Router();
 var portfinder = require("portfinder");
+var fallback = require('connect-history-api-fallback');
 var compiler = webpack(webpackConfig);
 var mockConfig,
   svrConfig,
@@ -62,6 +63,8 @@ function server() {
   app.use(express.static(path.resolve('.', 'mock')));
   //设置指定静态资源目录
   app.use(express.static(path.resolve('.', staticConfig.folder)));
+  //设置browserHistory时
+    app.use(fallback())
   //加载webpack处理
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
