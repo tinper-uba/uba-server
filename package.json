@@ -1,6 +1,6 @@
 {
   "name": "uba-server",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "uba plugin for dev server",
   "main": "index.js",
   "bin": {
@@ -27,14 +27,12 @@
     "chalk": "^2.3.0",
     "connect-history-api-fallback": "^1.5.0",
     "express": "^4.16.2",
-    "express-http-proxy": "^1.1.0",
     "http-proxy-middleware": "^0.17.4",
     "minimist": "^1.2.0",
     "portfinder": "^1.0.13",
-    "webpack": "^2.7.0",
+    "webpack": "^3.10.0",
     "webpack-dev-middleware": "^2.0.4",
-    "webpack-hot-middleware": "^2.21.0",
-    "webpack-merge": "^4.1.1"
+    "webpack-hot-middleware": "^2.21.0"
   },
   "devDependencies": {}
 }

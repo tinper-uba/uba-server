@@ -13,8 +13,8 @@ exports.getConfig = function () {
     var ubaConfig;
   try {
     ubaConfig = require(path.resolve(".", "uba.config.js"));
-    //new webpack.ProgressPlugin()
     ubaConfig.devConfig.plugins.push(new webpack.ProgressPlugin());
+    ubaConfig.devConfig.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
   } catch (e) {
     console.log(chalk.red(e));
     console.log(chalk.yellow("Please check uba.config.js configuration file"));

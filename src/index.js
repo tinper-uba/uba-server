@@ -8,7 +8,6 @@
 var chalk = require("chalk");
 var path = require("path");
 var express = require("express");
-// var proxy = require("express-http-proxy");
 var proxy = require("http-proxy-middleware");
 var webpackDevMiddleware = require("webpack-dev-middleware");
 var webpack = require("webpack");
@@ -55,8 +54,6 @@ function getVersion() {
 
 //开发调试总程序
 function server() {
-  //设置默认mock
-  app.use(express.static(path.resolve('.', 'mock')));
   //设置指定静态资源目录
   app.use(express.static(path.resolve('.', staticConfig.folder)));
   //设置browserHistory时
@@ -67,6 +64,10 @@ function server() {
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
     noInfo: svrConfig.noInfo,
+    logTime : true,
+    headers : {
+      "Uba-Server" : util.getPkg().version
+    },
     stats: {
       colors: true
     }
@@ -98,11 +99,10 @@ function server() {
         target: element.url,
         logLevel : "debug",
         changeOrigin: true,
-        onProxyRes: (proxyRes) => {
+        onProxyRes: function(proxyRes) {
           proxyRes.headers["Uba-Server-Proxy"] = "true";
         }
       }));
-      // app.use(element.router, proxy(element.url, element.options));
       console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
     }
   });
