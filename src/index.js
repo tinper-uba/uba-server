@@ -36,7 +36,7 @@ try {
   console.log(chalk.red(e));
   console.log("[uba] Please check the configuration file");
   mockConfig = undefined;
-} finally {}
+}
 
 function getHelp() {
   console.log(chalk.green(" Usage : "));
