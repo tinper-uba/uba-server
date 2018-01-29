@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-01-27 23:29:56
+ * @Last Modified time: 2018-01-29 10:28:20
  */
 
 var path = require("path");
@@ -14,7 +14,7 @@ exports.getConfig = function () {
   try {
     ubaConfig = require(path.resolve(".", "uba.config.js"));
     ubaConfig.devConfig.plugins.push(new webpack.ProgressPlugin());
-    ubaConfig.devConfig.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
+    //ubaConfig.devConfig.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
   } catch (e) {
     console.log(chalk.red(e));
     console.log(chalk.yellow("Please check uba.config.js configuration file"));
