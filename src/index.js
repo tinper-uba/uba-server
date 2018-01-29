@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-01-29 10:28:29
+ * @Last Modified time: 2018-01-30 00:02:57
  */
 
 var chalk = require("chalk");
@@ -55,24 +55,23 @@ function getVersion() {
 //开发调试总程序
 function server() {
   //设置指定静态资源目录
-  app.use(express.static(path.resolve('.', staticConfig.folder)));
-  //设置browserHistory时
-  if (svrConfig.historyApiFallback) {
-    app.use(history());
-  }
-  //加载webpack处理
-  app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    noInfo: svrConfig.noInfo,
-    logTime : true,
-    headers : {
-      "Uba-Server" : util.getPkg().version
-    },
-    stats: {
-      colors: true
-    }
-  }));
+  // app.use(express.static(path.resolve('.', staticConfig.folder)));
 
+
+  //开始加载代理
+  proxyConfig.forEach(function (element) {
+    if (element.enable) {
+      app.use(element.router, proxy({
+        target: element.url,
+        logLevel: "debug",
+        changeOrigin: true,
+        onProxyRes: function (proxyRes) {
+          proxyRes.headers["Uba-Server-Proxy"] = "true";
+        }
+      }));
+      console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
+    }
+  });
 
   //开始加载Mock
   for (let item in mockConfig) {
@@ -91,21 +90,24 @@ function server() {
     }
   }
   app.use(router);
-
-  //开始加载代理
-  proxyConfig.forEach(function (element) {
-    if (element.enable) {
-      app.use(element.router, proxy({
-        target: element.url,
-        logLevel : "debug",
-        changeOrigin: true,
-        onProxyRes: function(proxyRes) {
-          proxyRes.headers["Uba-Server-Proxy"] = "true";
-        }
-      }));
-      console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
+  //设置browserHistory时
+  if (svrConfig.historyApiFallback) {
+    app.use(history());
+  }
+  //加载webpack处理
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    noInfo: svrConfig.noInfo,
+    logTime: true,
+    headers: {
+      "Uba-Server": util.getPkg().version
+    },
+    stats: {
+      colors: true
     }
-  });
+  }));
+
+
 
 
   app.use(require("webpack-hot-middleware")(compiler));
