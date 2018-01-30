@@ -18,7 +18,7 @@ var router = express.Router();
 var portfinder = require("portfinder");
 var history = require("connect-history-api-fallback");
 var compiler = webpack(webpackConfig);
-var mockConfig, svrConfig, proxyConfig, staticConfig;
+var mockConfig, svrConfig, proxyConfig;
 var ubaConfig = util.getConfig();
 
 
@@ -26,8 +26,6 @@ var ubaConfig = util.getConfig();
 svrConfig = ubaConfig.svrConfig;
 //读取代理配置
 proxyConfig = ubaConfig.proxyConfig;
-//读取静态资源配置
-staticConfig = ubaConfig.staticConfig;
 
 
 try {
@@ -54,10 +52,6 @@ function getVersion() {
 
 //开发调试总程序
 function server() {
-  //设置指定静态资源目录
-  // app.use(express.static(path.resolve('.', staticConfig.folder)));
-
-
   //开始加载代理
   proxyConfig.forEach(function (element) {
     if (element.enable) {
