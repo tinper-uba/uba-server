@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### version 1.1.5
+
+1. 集成`open-browser-webpack-plugin`插件，自动判断域名和端口打开。
+2. 解决指定IP和端口设置不灵活导致启动服务绑定IP问题，如：`localhost`、`127.0.0.1`、`10.6.242.173`均可访问。
+3. 优化代码逻辑。
 
 ### version 1.0.0
 

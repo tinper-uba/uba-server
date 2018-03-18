@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-01-30 00:02:57
+ * @Last Modified time: 2018-03-18 17:36:10
  */
 
 var chalk = require("chalk");
@@ -11,6 +11,8 @@ var express = require("express");
 var proxy = require("http-proxy-middleware");
 var webpackDevMiddleware = require("webpack-dev-middleware");
 var webpack = require("webpack");
+var OpenBrowserPlugin = require("open-browser-webpack-plugin");
+var ip = require("ip");
 var util = require("./util");
 var webpackConfig = util.getConfig().devConfig;
 var app = express();
@@ -51,7 +53,7 @@ function getVersion() {
 
 
 //开发调试总程序
-function server() {
+function server(opt) {
   //开始加载代理
   proxyConfig.forEach(function (element) {
     if (element.enable) {
@@ -88,6 +90,11 @@ function server() {
   if (svrConfig.historyApiFallback) {
     app.use(history());
   }
+
+  compiler.apply(new OpenBrowserPlugin({
+    url: `http://${opt.ip}:${opt.port}`
+  }));
+
   //加载webpack处理
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
@@ -100,26 +107,18 @@ function server() {
       colors: true
     }
   }));
-
-
-
-
+  //模块热替换
   app.use(require("webpack-hot-middleware")(compiler));
-  //检测端口是否冲突设置
-  portfinder.basePort = svrConfig.port;
-  portfinder.getPort((err, port) => {
-    if (err) {
-      throw err;
-    }
-    app.listen(port, svrConfig.host, function () {
-      console.log();
-      console.log(chalk.green(`********************************************`));
-      console.log(chalk.yellow(` ❤️  uba-dev-server`));
-      console.log(chalk.green(` [core] : v${util.getPkg().version}`));
-      console.log(chalk.green(` [http] : http://${svrConfig.host}:${port}`));
-      console.log(chalk.green(`********************************************`));
-      console.log();
-    });
+  //启动调试服务
+  app.listen(opt.port, function () {
+    console.log();
+    console.log(chalk.green(`********************************************`));
+    console.log(chalk.yellow(` ❤️  uba-dev-server`));
+    console.log(chalk.green(` [core] : v${util.getPkg().version}`));
+    console.log(chalk.green(` [http] : http://127.0.0.1:${opt.port}`));
+    console.log(chalk.green(` [http] : http://${opt.ip}:${opt.port}`));
+    console.log(chalk.green(`********************************************`));
+    console.log();
   });
 
 
@@ -135,6 +134,20 @@ module.exports = {
     if (options.argv.v || options.argv.version) {
       getVersion();
     }
-    server();
+    //获得本机IP
+    var localIP = ip.address();
+    //设置默认端口
+    portfinder.basePort = 3000;
+    //获得可用端口
+    portfinder.getPort((err, port) => {
+      if (err) {
+        throw err;
+      }
+      //启动服务
+      server({
+        port,
+        ip: localIP
+      });
+    });
   }
 }
