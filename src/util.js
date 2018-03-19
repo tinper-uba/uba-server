@@ -2,18 +2,22 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-01-29 10:28:20
+ * @Last Modified time: 2018-03-19 12:31:44
  */
 
 var path = require("path");
 var chalk = require("chalk");
 var webpack = require("webpack");
+var argv = require("minimist")(process.argv.slice(2));
+var commands = argv;
 
 exports.getConfig = function () {
-    var ubaConfig;
+  var ubaConfig;
   try {
     ubaConfig = require(path.resolve(".", "uba.config.js"));
-    ubaConfig.devConfig.plugins.push(new webpack.ProgressPlugin());
+
+    !commands.noProcess && ubaConfig.devConfig.plugins.push(new webpack.ProgressPlugin());
+
     //ubaConfig.devConfig.plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
   } catch (e) {
     console.log(chalk.red(e));

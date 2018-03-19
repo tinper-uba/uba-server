@@ -2,12 +2,14 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-03-18 17:36:10
+ * @Last Modified time: 2018-03-19 12:31:38
  */
 
 var chalk = require("chalk");
 var path = require("path");
 var express = require("express");
+var argv = require("minimist")(process.argv.slice(2));
+var commands = argv;
 var proxy = require("http-proxy-middleware");
 var webpackDevMiddleware = require("webpack-dev-middleware");
 var webpack = require("webpack");
@@ -30,13 +32,7 @@ svrConfig = ubaConfig.svrConfig;
 proxyConfig = ubaConfig.proxyConfig;
 
 
-try {
-  mockConfig = require(path.resolve(".", "uba.mock.js"));
-} catch (e) {
-  console.log(chalk.red(e));
-  console.log("[uba] Please check the configuration file");
-  mockConfig = undefined;
-}
+
 
 function getHelp() {
   console.log(chalk.green(" Usage : "));
@@ -54,6 +50,14 @@ function getVersion() {
 
 //开发调试总程序
 function server(opt) {
+  //检查是否有本地mock
+  try {
+    mockConfig = require(path.resolve(".", "uba.mock.js"));
+  } catch (e) {
+    console.log(chalk.red(e));
+    console.log(chalk.yellow("[uba] Please check the uba.mock.js configuration file"));
+    mockConfig = undefined;
+  }
   //开始加载代理
   proxyConfig.forEach(function (element) {
     if (element.enable) {
@@ -91,20 +95,25 @@ function server(opt) {
     app.use(history());
   }
 
-  compiler.apply(new OpenBrowserPlugin({
-    url: `http://${opt.ip}:${opt.port}`
-  }));
+  if (!commands.noOpen) {
+    //集成自动开启浏览器插件
+    compiler.apply(new OpenBrowserPlugin({
+      url: `http://${opt.ip}:${opt.port}`
+    }));
+  }
+
 
   //加载webpack处理
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    noInfo: svrConfig.noInfo,
     logTime: true,
+    logLevel: commands.logLevel || "info",
     headers: {
       "Uba-Server": util.getPkg().version
     },
     stats: {
-      colors: true
+      colors: true,
+      chunks: !commands.chunks
     }
   }));
   //模块热替换
@@ -113,10 +122,10 @@ function server(opt) {
   app.listen(opt.port, function () {
     console.log();
     console.log(chalk.green(`********************************************`));
-    console.log(chalk.yellow(` ❤️  uba-dev-server`));
-    console.log(chalk.green(` [core] : v${util.getPkg().version}`));
-    console.log(chalk.green(` [http] : http://127.0.0.1:${opt.port}`));
-    console.log(chalk.green(` [http] : http://${opt.ip}:${opt.port}`));
+    console.log(chalk.yellow(` ❤️  uba-develop-server`));
+    console.log(chalk.green.bold(` [core] : v${util.getPkg().version}`));
+    console.log(chalk.green.bold(` [http] : http://127.0.0.1:${opt.port}`));
+    console.log(chalk.green.bold(` [http] : http://${opt.ip}:${opt.port}`));
     console.log(chalk.green(`********************************************`));
     console.log();
   });
@@ -126,7 +135,7 @@ function server(opt) {
 
 module.exports = {
   plugin: function (options) {
-    commands = options.cmd;
+    cmd = options.cmd;
     pluginname = options.name;
     if (options.argv.h || options.argv.help) {
       getHelp();
@@ -137,7 +146,7 @@ module.exports = {
     //获得本机IP
     var localIP = ip.address();
     //设置默认端口
-    portfinder.basePort = 3000;
+    portfinder.basePort = commands.port || 3000;
     //获得可用端口
     portfinder.getPort((err, port) => {
       if (err) {
