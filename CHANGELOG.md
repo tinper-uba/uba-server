@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### version 1.1.6
+
+1. 端口冲突检测中间件在个别windows7系统上会出错的问题
+
 ### version 1.1.5
 
 1. 集成`open-browser-webpack-plugin`插件，自动判断域名和端口打开。

@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-03-19 12:31:38
+ * @Last Modified time: 2018-03-20 22:51:42
  */
 
 var chalk = require("chalk");
@@ -19,21 +19,20 @@ var util = require("./util");
 var webpackConfig = util.getConfig().devConfig;
 var app = express();
 var router = express.Router();
-var portfinder = require("portfinder");
+var getPort = require("get-port");
 var history = require("connect-history-api-fallback");
 var compiler = webpack(webpackConfig);
 var mockConfig, svrConfig, proxyConfig;
 var ubaConfig = util.getConfig();
-
 
 //读取服务器配置
 svrConfig = ubaConfig.svrConfig;
 //读取代理配置
 proxyConfig = ubaConfig.proxyConfig;
 
-
-
-
+/**
+ * @description 帮助
+ */
 function getHelp() {
   console.log(chalk.green(" Usage : "));
   console.log();
@@ -42,13 +41,19 @@ function getHelp() {
   process.exit(0);
 }
 
+/**
+ * @description 版本号
+ */
 function getVersion() {
   console.log(chalk.green(require("../package.json").version));
   process.exit(0);
 }
 
 
-//开发调试总程序
+/**
+ * @description 调试服务
+ * @param {*} opt {ip,port}
+ */
 function server(opt) {
   //检查是否有本地mock
   try {
@@ -134,24 +139,26 @@ function server(opt) {
 }
 
 module.exports = {
+  /**
+   * @description 启动插件
+   */
   plugin: function (options) {
     cmd = options.cmd;
     pluginname = options.name;
+    //--help
     if (options.argv.h || options.argv.help) {
       getHelp();
     }
+    //--help
     if (options.argv.v || options.argv.version) {
       getVersion();
     }
     //获得本机IP
     var localIP = ip.address();
     //设置默认端口
-    portfinder.basePort = commands.port || 3000;
-    //获得可用端口
-    portfinder.getPort((err, port) => {
-      if (err) {
-        throw err;
-      }
+    getPort({
+      port: commands.port || 3000
+    }).then(port => {
       //启动服务
       server({
         port,
