@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-03-20 22:51:42
+ * @Last Modified time: 2018-03-21 15:19:40
  */
 
 var chalk = require("chalk");
@@ -29,6 +29,8 @@ var ubaConfig = util.getConfig();
 svrConfig = ubaConfig.svrConfig;
 //读取代理配置
 proxyConfig = ubaConfig.proxyConfig;
+//读取静态文件服务配置
+staticConfig = ubaConfig.staticConfig;
 
 /**
  * @description 帮助
@@ -62,6 +64,10 @@ function server(opt) {
     console.log(chalk.red(e));
     console.log(chalk.yellow("[uba] Please check the uba.mock.js configuration file"));
     mockConfig = undefined;
+  }
+  //设置指定静态资源目录
+  if (staticConfig) {
+    app.use(express.static(path.resolve('.', staticConfig.folder)));
   }
   //开始加载代理
   proxyConfig.forEach(function (element) {

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### verison 1.1.7
+
+1. 解决之前静态服务`staticConfig`冲突导致的问题现已修复
+
 ### version 1.1.6
 
 1. 端口冲突检测中间件在个别windows7系统上会出错的问题
