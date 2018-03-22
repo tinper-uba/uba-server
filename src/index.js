@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-03-21 15:19:40
+ * @Last Modified time: 2018-03-22 09:52:02
  */
 
 var chalk = require("chalk");
@@ -68,6 +68,9 @@ function server(opt) {
   //设置指定静态资源目录
   if (staticConfig) {
     app.use(express.static(path.resolve('.', staticConfig.folder)));
+    if (staticConfig.mock) {
+      app.use(express.static(path.resolve('.', staticConfig.mock)));
+    }
   }
   //开始加载代理
   proxyConfig.forEach(function (element) {

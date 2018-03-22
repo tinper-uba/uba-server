@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### version 1.1.8
+
+1. 增加指定mock文件夹去访问静态资源
+
 ### verison 1.1.7
 
 1. 解决之前静态服务`staticConfig`冲突导致的问题现已修复
