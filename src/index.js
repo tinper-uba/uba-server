@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-03-22 09:52:02
+ * @Last Modified time: 2018-03-28 10:26:58
  */
 
 var chalk = require("chalk");
@@ -74,15 +74,18 @@ function server(opt) {
   }
   //开始加载代理
   proxyConfig.forEach(function (element) {
-    if (element.enable) {
-      app.use(element.router, proxy({
+    if (element.enable) {//代理开启
+      //默认配置项
+      let proxyOpt = {
         target: element.url,
         logLevel: "debug",
         changeOrigin: true,
+        headers: (typeof element.headers !== 'undefined' ? element.headers : {}),
         onProxyRes: function (proxyRes) {
           proxyRes.headers["Uba-Server-Proxy"] = "true";
         }
-      }));
+      }
+      app.use(element.router, proxy(proxyOpt));
       console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
     }
   });

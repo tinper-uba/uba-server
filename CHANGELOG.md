@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### version 1.1.9
+
+1. 增加代理参数headers用于设置Proxy Server请求头参数
+
 ### version 1.1.8
 
 1. 增加指定mock文件夹去访问静态资源
