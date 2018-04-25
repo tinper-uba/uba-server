@@ -2,20 +2,20 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2018-04-23 15:28:04
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-04-23 15:28:10
+ * @Last Modified time: 2018-04-25 14:02:58
  */
 
-const util = require("./util");
-const chalk = require("chalk");
-const express = require("express");
+const util = require('./util');
+const chalk = require('chalk');
+const express = require('express');
 const app = new express();
-const webpack = require("webpack");
-const devMiddleware = require("webpack-dev-middleware");
-const hotMiddleware = require("webpack-hot-middleware");
-const OpenBrowserPlugin = require("open-browser-webpack-plugin");
-const ip = require("ip");
+const webpack = require('webpack');
+const devMiddleware = require('webpack-dev-middleware');
+const hotMiddleware = require('webpack-hot-middleware');
+const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const ip = require('ip');
 const getPort = require('get-port');
-const webpackConfig = require("./util").getUbaConfig().devConfig;
+const webpackConfig = require('./webpack.dev.config');
 const compiler = webpack(webpackConfig);
 
 
@@ -30,12 +30,15 @@ server = opt => {
   //静态编译
   const instance = devMiddleware(compiler, {
     logTime: true,
+    logLevel: 'info',
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Uba-Server": util.getPkg().version
+      'Access-Control-Allow-Origin': '*',
+      'Uba-Server': util.getPkg().version
     },
     stats: {
       colors: true,
+      hash: false,
+      children: false,
       chunks: false
     }
   });
