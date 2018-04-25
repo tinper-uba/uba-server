@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### version 2.0.0
+
+1. 插件拆分为`proxy`、`mock`、`static`
+2. 
+
 ### version 1.1.9
 
 1. 增加代理参数headers用于设置Proxy Server请求头参数
