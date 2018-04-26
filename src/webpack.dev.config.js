@@ -4,6 +4,7 @@
 
 const path = require('path');
 const chalk = require('chalk');
+const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
@@ -55,7 +56,9 @@ if (cfg.appType === 'single') {
       break;
   }
 } else if (cfg.appType === 'multi') {
-
+  glob.sync(cfg.entry).forEach(path => {
+    console.log(path);
+  });
 }
 
 // console.log(config);
