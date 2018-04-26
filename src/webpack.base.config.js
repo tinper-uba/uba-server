@@ -170,11 +170,7 @@ const config = {
       ".jsx", ".js", ".less", ".css", ".json"
     ],
     alias: {
-      components: path.resolve('.', "src/components/"),
-      modules: path.resolve('.', "src/modules/"),
-      routes: path.resolve('.', "src/routes/"),
-      layout: path.resolve('.', "src/layout/"),
-      utils: path.resolve('.', "src/utils/")
+      components: path.resolve('.', "src/components/")
     }
   },
   plugins: [
