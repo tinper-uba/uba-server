@@ -18,6 +18,9 @@ const getPort = require('get-port');
 const webpackConfig = require('./webpack.dev.config');
 const compiler = webpack(webpackConfig);
 
+// console.log(webpackConfig);
+
+// process.exit(0)
 
 /**
  * server 主程序

@@ -3,7 +3,7 @@
 ### version 2.0.0
 
 1. 插件拆分为`proxy`、`mock`、`static`
-2. 
+2. 重写客户端工程配置文件
 
 ### version 1.1.9
 

@@ -5,16 +5,6 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-//提取package里的包
-function getVendors() {
-  let pkg = require(path.resolve('.', './package.json'));
-  let _vendors = [];
-  for (const key in pkg.dependencies) {
-    _vendors.push(key);
-  }
-  return _vendors;
-}
-
 const config = {
   output: {
     path: path.resolve('.', 'dist'),

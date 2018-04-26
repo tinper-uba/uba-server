@@ -12,10 +12,14 @@ const base = require('./webpack.base.config');
 const cfg = util.getUbaConfig()();
 
 const config = {
-  devtool: "cheap-module-eval-source-map",
+  devtool: cfg.devtool ? cfg.devtool : "cheap-module-eval-source-map",
   mode: 'development',
-  //app: ['./src/app.jsx', require.resolve('./hot-middleware/client')]
-  externals: Object.assign({}, cfg.externals),
+  output: cfg.output,
+  externals: cfg.externals,
+  resolve: cfg.resolve,
+  module: {
+    rules: cfg.loader
+  },
   plugins: [
     new HtmlWebpackPlugin(Object.assign({
       template: "./src/index.html"
@@ -23,6 +27,8 @@ const config = {
     new webpack.HotModuleReplacementPlugin()
   ]
 }
+
+config.plugins = config.plugins.concat(cfg.plugins);
 
 if (cfg.appType === 'single') {
   switch (Object.prototype.toString.call(cfg.entry)) {
@@ -52,7 +58,7 @@ if (cfg.appType === 'single') {
 
 }
 
-console.log(config);
+// console.log(config);
 
-process.exit(0);
-module.exports = merge.smart(base, config);
+// process.exit(0);
+module.exports = merge(base, config);
