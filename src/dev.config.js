@@ -8,10 +8,13 @@ const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const argv = require("minimist")(process.argv.slice(2));
+const commands = argv;
 const util = require('./util');
 const base = require('./base.config');
 const cfg = util.getUbaConfig()();
 
+//默认的配置用于merge操作
 const config = {
   devtool: cfg.devtool ? cfg.devtool : "cheap-module-eval-source-map",
   mode: 'development',
@@ -22,26 +25,31 @@ const config = {
     rules: cfg.loader
   },
   plugins: [
-    // new HtmlWebpackPlugin(Object.assign({
-    //   template: "./src/index.html"
-    // }, cfg.html)),
     new webpack.HotModuleReplacementPlugin()
   ]
 }
 
-config.plugins = config.plugins.concat(cfg.plugins);
+//传入插件设置
+!commands.noProcess && config.plugins.push(new webpack.ProgressPlugin());
+config.plugins = config.plugins.concat(cfg.devPlugins);
 
+//当前应用模式 单页
 if (cfg.appType === 'single') {
+  //设置一次HTML插件
   config['plugins'].push(new HtmlWebpackPlugin(Object.assign({
     template: "./src/index.html"
   }, cfg.html)));
+  //处理不同类型的入口模式
   switch (Object.prototype.toString.call(cfg.entry)) {
+    //数组的形式：entry : ['./src/app.js']
     case '[object Array]':
       config['entry'] = cfg.entry.concat([require.resolve('./hot-middleware/client')]);
       break;
+      //字符串形式：entry : './src/app.js'
     case '[object String]':
       config['entry'] = [cfg.entry, require.resolve('./hot-middleware/client')];
       break;
+      //对象形式：entry : { app:'./src/app.js',common:['react','react-dom'] }
     case '[object Object]':
       config['entry'] = {};
       for (let i = 0; i < Object.keys(cfg.entry).length; i++) {
@@ -58,9 +66,10 @@ if (cfg.appType === 'single') {
       config['entry'] = {};
       break;
   }
-} else if (cfg.appType === 'multi') {
+} else if (cfg.appType === 'multi') { //多页模式
   let entries = {};
   config['entry'] = {};
+  //按照传入glob参数匹配扫描
   glob.sync(cfg.entry).forEach(path => {
     const chunk = path.split("./src/pages/")[1].split("/index.js")[0];
     entries[`${chunk}`] = [path, require.resolve('./hot-middleware/client')];

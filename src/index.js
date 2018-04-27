@@ -5,8 +5,9 @@
  * @Last Modified time: 2018-04-27 15:50:55
  */
 
-const util = require('./util');
 const chalk = require('chalk');
+const argv = require("minimist")(process.argv.slice(2));
+const commands = argv;
 const express = require('express');
 const app = new express();
 const webpack = require('webpack');
@@ -15,6 +16,7 @@ const hotMiddleware = require('webpack-hot-middleware');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const ip = require('ip');
 const getPort = require('get-port');
+const util = require('./util');
 const webpackConfig = require('./dev.config');
 const compiler = webpack(webpackConfig);
 
@@ -24,13 +26,15 @@ const compiler = webpack(webpackConfig);
  */
 server = opt => {
   //打开浏览器
-  compiler.apply(new OpenBrowserPlugin({
-    url: `http://${opt.ip}:${opt.port}`
-  }));
+  if (!commands.noOpen) {
+    compiler.apply(new OpenBrowserPlugin({
+      url: `http://${opt.ip}:${opt.port}`
+    }));
+  }
   //静态编译
   const instance = devMiddleware(compiler, {
     logTime: true,
-    logLevel: 'info',
+    logLevel: commands.logLevel || "info",
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Uba-Server': util.getPkg().version
@@ -71,7 +75,7 @@ module.exports = {
     //设置默认端口
     //检测是否被占用，更换端口，启动调试服务
     getPort({
-      port: 3000
+      port: commands.port || 3000
     }).then(port => {
       //启动服务
       server({

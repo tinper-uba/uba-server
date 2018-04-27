@@ -5,6 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+
 const config = {
   output: {
     path: path.resolve('.', 'dist'),
@@ -170,7 +171,6 @@ const config = {
     new MiniCssExtractPlugin({
       filename: '[name].[hash:8].css'
     }),
-    new webpack.ProgressPlugin(),
     new webpack.optimize.RuntimeChunkPlugin({
       name: 'manifest'
     }),
