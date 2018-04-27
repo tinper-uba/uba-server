@@ -9,7 +9,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const util = require('./util');
-const base = require('./webpack.base.config');
+const base = require('./base.config');
 const cfg = util.getUbaConfig()();
 
 const config = {
@@ -71,12 +71,9 @@ if (cfg.appType === 'single') {
       filename: `${chunk}.html`
     };
     config['plugins'].push(new HtmlWebpackPlugin(Object.assign(htmlConfig, cfg.html)));
-    console.log(htmlConfig)
   });
   config['entry'] = entries;
 }
 
-// console.log(config);
 
-// process.exit(0);
 module.exports = merge(base, config);

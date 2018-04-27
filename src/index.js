@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2018-04-23 15:28:04
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-04-25 14:02:58
+ * @Last Modified time: 2018-04-27 15:50:55
  */
 
 const util = require('./util');
@@ -15,12 +15,9 @@ const hotMiddleware = require('webpack-hot-middleware');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const ip = require('ip');
 const getPort = require('get-port');
-const webpackConfig = require('./webpack.dev.config');
+const webpackConfig = require('./dev.config');
 const compiler = webpack(webpackConfig);
 
-// console.log(webpackConfig);
-
-// process.exit(0)
 
 /**
  * server 主程序
