@@ -22,9 +22,9 @@ const config = {
     rules: cfg.loader
   },
   plugins: [
-    new HtmlWebpackPlugin(Object.assign({
-      template: "./src/index.html"
-    }, cfg.html)),
+    // new HtmlWebpackPlugin(Object.assign({
+    //   template: "./src/index.html"
+    // }, cfg.html)),
     new webpack.HotModuleReplacementPlugin()
   ]
 }
@@ -32,6 +32,9 @@ const config = {
 config.plugins = config.plugins.concat(cfg.plugins);
 
 if (cfg.appType === 'single') {
+  config['plugins'].push(new HtmlWebpackPlugin(Object.assign({
+    template: "./src/index.html"
+  }, cfg.html)));
   switch (Object.prototype.toString.call(cfg.entry)) {
     case '[object Array]':
       config['entry'] = cfg.entry.concat([require.resolve('./hot-middleware/client')]);
@@ -56,9 +59,21 @@ if (cfg.appType === 'single') {
       break;
   }
 } else if (cfg.appType === 'multi') {
+  let entries = {};
+  config['entry'] = {};
   glob.sync(cfg.entry).forEach(path => {
-    console.log(path);
+    const chunk = path.split("./src/pages/")[1].split("/index.js")[0];
+    entries[`${chunk}`] = [path, require.resolve('./hot-middleware/client')];
+    let htmlConfig = {
+      template: `./src/pages/${chunk}/index.html`,
+      chunks: ['manifest', 'vendor', 'test', chunk],
+      chunksSortMode: "manual",
+      filename: `${chunk}.html`
+    };
+    config['plugins'].push(new HtmlWebpackPlugin(Object.assign(htmlConfig, cfg.html)));
+    console.log(htmlConfig)
   });
+  config['entry'] = entries;
 }
 
 // console.log(config);
