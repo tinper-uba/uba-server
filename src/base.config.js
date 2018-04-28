@@ -142,8 +142,6 @@ const config = {
           name: '[name].[hash:8].[ext]',
           outputPath: 'images'
         }
-      }, {
-        loader: require.resolve('image-webpack-loader')
       }]
     }, {
       test: /\.(eot|ttf|woff|woff2)(\?.+)?$/,
