@@ -24,7 +24,7 @@ exports.getRunPath = (file) => {
  */
 exports.getUbaConfig = () => {
   try {
-    return require(this.getRunPath("config.js"));
+    return require(this.getRunPath("uba.config.js"));
   } catch (error) {
     this.errorLog(error, 'The "uba.config.js" configuration file was not found', true);
     process.exit(0);
