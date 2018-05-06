@@ -9,7 +9,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const config = {
   output: {
     path: path.resolve('.', 'dist'),
-    filename: '[name].[hash:8].bundle.js'
+    filename: 'js/[name].[hash:8].bundle.js'
   },
   optimization: {
     //提取公共模块，webpack4去除了CommonsChunkPlugin，使用SplitChunksPlugin作为替代
@@ -34,7 +34,7 @@ const config = {
         //缓存组信息，名称可以自己定义
         commons: {
           //拆分出来块的名字,默认是缓存组名称+"~" + [name].js
-          name: "test",
+          name: "commons",
           // 同上
           chunks: "all",
           // 同上
@@ -167,7 +167,7 @@ const config = {
       banner: 'build:uba hash:[hash], chunkhash:[chunkhash], name:[name], filebase:[filebase], query:[query], file:[file]'
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash:8].css'
+      filename: 'css/[name].[hash:8].css'
     }),
     new webpack.optimize.RuntimeChunkPlugin({
       name: 'manifest'

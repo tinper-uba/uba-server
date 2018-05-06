@@ -75,7 +75,7 @@ if (cfg.appType === 'single') {
     entries[`${chunk}`] = [path, require.resolve('./hot-middleware/client')];
     let htmlConfig = {
       template: `./src/pages/${chunk}/index.html`,
-      chunks: ['manifest', 'vendor', 'test', chunk],
+      chunks: ['manifest', 'vendor', 'commons', chunk],
       chunksSortMode: "manual",
       filename: `${chunk}.html`
     };

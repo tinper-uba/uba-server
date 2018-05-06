@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### version 2.0.1
+
+1. webpack4参数更新、js、css归类
+
 ### version 2.0.0
 
 1. 插件拆分为`proxy`、`mock`、`static`
