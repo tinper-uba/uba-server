@@ -1,5 +1,10 @@
 # CHANGELOG
 
+
+### version 1.2.0
+
+1. 增加地址重写参数`pathRewrite`
+
 ### version 1.1.9
 
 1. 增加代理参数headers用于设置Proxy Server请求头参数

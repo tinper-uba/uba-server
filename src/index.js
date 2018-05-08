@@ -2,7 +2,7 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-03-28 10:26:58
+ * @Last Modified time: 2018-05-08 18:09:45
  */
 
 var chalk = require("chalk");
@@ -80,6 +80,7 @@ function server(opt) {
         target: element.url,
         logLevel: "debug",
         changeOrigin: true,
+        pathRewrite: Object.assign({}, element.pathRewrite),
         headers: (typeof element.headers !== 'undefined' ? element.headers : {}),
         onProxyRes: function (proxyRes) {
           proxyRes.headers["Uba-Server-Proxy"] = "true";
