@@ -167,7 +167,7 @@ const config = {
       banner: 'build:uba hash:[hash], chunkhash:[chunkhash], name:[name], filebase:[filebase], query:[query], file:[file]'
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[hash:8].css'
+      filename: '[name].[hash:8].css'
     }),
     new webpack.optimize.RuntimeChunkPlugin({
       name: 'manifest'
