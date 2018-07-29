@@ -140,7 +140,8 @@ const config = {
         options: {
           limit: 8192,
           name: '[name].[hash:8].[ext]',
-          outputPath: 'images'
+          publicPath: "../images",
+          outputPath: "images/"
         }
       }]
     }, {
@@ -149,7 +150,8 @@ const config = {
         loader: require.resolve('file-loader'),
         options: {
           name: '[name].[hash:8].[ext]',
-          outputPath: 'fonts'
+          publicPath: "../fonts",
+          outputPath: "fonts/"
         }
       }]
     }]
@@ -164,10 +166,10 @@ const config = {
   },
   plugins: [
     new webpack.BannerPlugin({
-      banner: 'build:uba hash:[hash], chunkhash:[chunkhash], name:[name], filebase:[filebase], query:[query], file:[file]'
+      banner: 'build:uba by yueming@yonyou.com hash:[hash], chunkhash:[chunkhash], name:[name], filebase:[filebase], query:[query], file:[file]'
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash:8].css'
+      filename: 'css/[name].[hash:8].css'
     }),
     new webpack.optimize.RuntimeChunkPlugin({
       name: 'manifest'

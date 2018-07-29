@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### version 2.0.3
+
+1. 实现css内的图片路径错误的问题，整体修复
+
+### version 2.0.2
+
+1. 去除css文件夹
+
 ### version 2.0.1
 
 1. webpack4参数更新、js、css归类
