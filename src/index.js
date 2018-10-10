@@ -1,8 +1,8 @@
-/* uba-server
+/* uba-server for webpack3
  * @Author: Kvkens(yueming@yonyou.com)
- * @Date:   2017-5-15 00:00:00
+ * @Date:   2018-10-10 14:49:16
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-05-08 18:09:45
+ * @Last Modified time: 2018-10-10 14:49:21
  */
 
 var chalk = require("chalk");
