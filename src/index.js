@@ -1,4 +1,4 @@
-/* uba-server for webpack3
+/* uba-server for webpack4
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2018-10-10 14:49:16
  * @Last Modified by:   Kvkens
