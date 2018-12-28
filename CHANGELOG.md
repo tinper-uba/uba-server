@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### version 1.2.1
+
+1. 增加`homepage`参数，默认打开的页面相对路径
+2. 增加`opts`用于暴露内部代理插件`http-proxy-middleware`的参数
+3. 修改启动服务后默认打开浏览器的URL地址为127.0.0.1
+4. 解决`historyApiFallback`不传入报错的问题
 
 ### version 1.2.0
 

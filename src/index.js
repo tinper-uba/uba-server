@@ -2,28 +2,28 @@
  * @Author: Kvkens(yueming@yonyou.com)
  * @Date:   2017-5-15 00:00:00
  * @Last Modified by:   Kvkens
- * @Last Modified time: 2018-05-08 18:09:45
+ * @Last Modified time: 2018-12-28 13:48:24
  */
 
-var chalk = require("chalk");
-var path = require("path");
-var express = require("express");
-var argv = require("minimist")(process.argv.slice(2));
-var commands = argv;
-var proxy = require("http-proxy-middleware");
-var webpackDevMiddleware = require("webpack-dev-middleware");
-var webpack = require("webpack");
-var OpenBrowserPlugin = require("open-browser-webpack-plugin");
-var ip = require("ip");
-var util = require("./util");
-var webpackConfig = util.getConfig().devConfig;
-var app = express();
-var router = express.Router();
-var getPort = require("get-port");
-var history = require("connect-history-api-fallback");
-var compiler = webpack(webpackConfig);
-var mockConfig, svrConfig, proxyConfig;
-var ubaConfig = util.getConfig();
+const chalk = require("chalk");
+const path = require("path");
+const express = require("express");
+const argv = require("minimist")(process.argv.slice(2));
+const commands = argv;
+const proxy = require("http-proxy-middleware");
+const webpackDevMiddleware = require("webpack-dev-middleware");
+const webpack = require("webpack");
+const OpenBrowserPlugin = require("open-browser-webpack-plugin");
+const ip = require("ip");
+const util = require("./util");
+const webpackConfig = util.getConfig().devConfig;
+const app = express();
+const router = express.Router();
+const getPort = require("get-port");
+const history = require("connect-history-api-fallback");
+const compiler = webpack(webpackConfig);
+let mockConfig, svrConfig, proxyConfig;
+const ubaConfig = util.getConfig();
 
 //读取服务器配置
 svrConfig = ubaConfig.svrConfig;
@@ -61,7 +61,7 @@ function server(opt) {
   try {
     mockConfig = require(path.resolve(".", "uba.mock.js"));
   } catch (e) {
-    console.log(chalk.red(e));
+    //console.log(chalk.red(e));
     console.log(chalk.yellow("[uba] Please check the uba.mock.js configuration file"));
     mockConfig = undefined;
   }
@@ -86,7 +86,7 @@ function server(opt) {
           proxyRes.headers["Uba-Server-Proxy"] = "true";
         }
       }
-      app.use(element.router, proxy(proxyOpt));
+      app.use(element.router, proxy(element.opts || proxyOpt));
       console.log(chalk.green(`[proxy] : ${element.router} to ${element.url}`));
     }
   });
@@ -109,14 +109,14 @@ function server(opt) {
   }
   app.use(router);
   //设置browserHistory时
-  if (svrConfig.historyApiFallback) {
+  if (svrConfig && svrConfig.historyApiFallback) {
     app.use(history());
   }
 
   if (!commands.noOpen) {
     //集成自动开启浏览器插件
     compiler.apply(new OpenBrowserPlugin({
-      url: `http://${opt.ip}:${opt.port}`
+      url: `http://127.0.0.1:${opt.port}/${commands.homepage || ''}`
     }));
   }
 
@@ -147,8 +147,6 @@ function server(opt) {
     console.log(chalk.green(`********************************************`));
     console.log();
   });
-
-
 }
 
 module.exports = {
@@ -167,7 +165,7 @@ module.exports = {
       getVersion();
     }
     //获得本机IP
-    var localIP = ip.address();
+    let localIP = ip.address();
     //设置默认端口
     getPort({
       port: commands.port || 3000
