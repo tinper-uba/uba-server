@@ -1,6 +1,6 @@
 {
   "name": "uba-server",
-  "version": "1.2.1",
+  "version": "2.1.0",
   "description": "dev server plugin for uba",
   "main": "index.js",
   "bin": {
@@ -24,17 +24,17 @@
   },
   "homepage": "https://github.com/tinper-uba/uba-server#readme",
   "dependencies": {
-    "chalk": "^2.3.2",
+    "chalk": "^2.4.1",
     "connect-history-api-fallback": "^1.5.0",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "get-port": "^3.2.0",
-    "http-proxy-middleware": "^0.18.0",
+    "http-proxy-middleware": "^0.19.1",
     "ip": "^1.1.5",
     "minimist": "^1.2.0",
     "open-browser-webpack-plugin": "0.0.5",
     "webpack": "^2.7.0",
     "webpack-dev-middleware": "^2.0.4",
-    "webpack-hot-middleware": "^2.21.2"
+    "webpack-hot-middleware": "^2.24.3"
   },
   "devDependencies": {}
 }
