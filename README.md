@@ -18,7 +18,7 @@
 
 ## 安装
 
-无需单独安装，安装`uba`工具内置集成。
+无需单独安装，安装`uba`工具内置集成。
 
 工具是依赖在开发框架内去使用的，具体参考开发框架里的`package.json`的启动脚本命令，配合`uba.config.js`配置文件使用
 
@@ -31,7 +31,7 @@ $ npm install uba -g
 > uba server --port 4000 --noInfo --logLevel debug --chunks --noOpen
 
 - `--noProcess` 不显示进度百分比
-- `--logLevel` 日志级别，默认：info 其他为：trace,debug,info,warn,error,silent
+- `--logLevel` 日志级别，默认：info 其他为：trace,debug,info,warn,error,silent
 - `--chunks` 不显示详细的chunks信息
 - `--port` 服务器端口设置，默认：3000，如冲突自增1->3001
 - `--noOpen` 不自动打开浏览器
