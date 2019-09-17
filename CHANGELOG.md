@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### version 2.1.1
+
+1. 锁定包版本，防止第三方插件出现自动升级导致BUG
+
 ### version 1.2.1
 
 1. 增加`homepage`参数，默认打开的页面相对路径
